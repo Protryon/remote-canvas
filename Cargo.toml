@@ -1,0 +1,23 @@
+[package]
+name = "remote-canvas"
+version = "1.0.0"
+authors = ["Protryon <max.bruce12@gmail.com>"]
+edition = "2018"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/Protryon/remote-canvas"
+description = "An adapter for Browser-based canvas implementations into a Rust application at scale."
+keywords = [ "canvas", "websocket", "render", "browser" ]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+log = "0.4.8"
+env_logger = "0.6.1"
+tokio-tungstenite = "0.10.1"
+tungstenite = "0.10.1"
+tokio = { version = "0.2", features = ["full"] }
+futures = "0.3.3"
+uuid = { version = "*", features = ["serde", "v4"] }
+actix-web = "2.0"
+actix-rt = "1.0"
+async-std = { version = "1.5", features = ["unstable"] } 
