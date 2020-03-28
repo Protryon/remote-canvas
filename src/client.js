@@ -161,6 +161,12 @@ const receiveMessage = message => {
         } else if (id == "SetFilter") {
             ctx.filter = packet.filter ? packet.filter : null;
             genericSuccess(txn_uuid);
+        } else if (id == "SetWidth") {
+            canvas.width = packet.width;
+            genericSuccess(txn_uuid);
+        } else if (id == "SetHeight") {
+            canvas.height = packet.height;
+            genericSuccess(txn_uuid);
         } else if (id == "ClearRect") {
             ctx.clearRect(packet.x, packet.y, packet.width, packet.height);
             genericSuccess(txn_uuid);

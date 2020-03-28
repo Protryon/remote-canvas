@@ -93,6 +93,12 @@ pub(crate) enum WSMessageData {
     SetFilter {
         filter: Option<String>,
     },
+    SetWidth {
+        width: i32,
+    },
+    SetHeight {
+        height: i32,
+    },
     ClearRect {
         x: f64,
         y: f64,

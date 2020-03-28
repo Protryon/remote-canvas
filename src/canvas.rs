@@ -636,6 +636,36 @@ impl Canvas2D {
         result
     }
 
+    pub fn get_width(&self) -> u32 {
+        self.width
+    }
+
+    pub async fn set_width(&mut self, width: u32) -> Result<()> {
+        let result = map_js_error(
+            self.send(WSMessageData::SetWidth { width: width as i32 })
+                .await,
+        );
+        if result.is_ok() {
+            self.width = width;
+        }
+        result
+    }
+
+    pub fn get_height(&self) -> u32 {
+        self.height
+    }
+
+    pub async fn set_height(&mut self, height: u32) -> Result<()> {
+        let result = map_js_error(
+            self.send(WSMessageData::SetHeight { height: height as i32 })
+                .await,
+        );
+        if result.is_ok() {
+            self.height = height;
+        }
+        result
+    }
+
     pub async fn clear_rect(&mut self, x: f64, y: f64, width: f64, height: f64) -> Result<()> {
         map_js_error(
             self.send(WSMessageData::ClearRect {
