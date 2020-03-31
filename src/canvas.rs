@@ -483,7 +483,7 @@ impl Canvas2D {
     }
 
     pub fn get_shadow_blur(&self) -> f64 {
-        self.line_dash_offset
+        self.shadow_blur
     }
 
     pub async fn set_shadow_blur(&mut self, shadow_blur: f64) -> Result<()> {
