@@ -1447,7 +1447,7 @@ checksum = "7fe5bd57d1d7414c6b5ed48563a2c855d995ff777729dcd91c369ec7fea395ae"
 
 [[package]]
 name = "remote-canvas"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
  "actix-rt",
  "actix-web",
