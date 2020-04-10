@@ -3,7 +3,6 @@ use crate::websocket::*;
 use async_std::sync;
 pub use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
-use tokio::sync::oneshot;
 use uuid::Uuid;
 
 #[derive(Clone)]
@@ -265,7 +264,7 @@ impl ImageData {
 
 impl Canvas2D {
     async fn send(&mut self, data: WSMessageData) -> Result<WsMessageResponse> {
-        let (sender, receiver) = oneshot::channel::<WsMessageResponse>();
+        let (sender, receiver) = sync::channel::<WsMessageResponse>(1);
         self.sender
             .send(WSMessage {
                 context: self.uuid,
@@ -273,9 +272,9 @@ impl Canvas2D {
                 response: Some(sender),
             })
             .await?;
-        receiver
+        receiver.recv()
             .await
-            .map_err(|_| canvas_error!("failed to receiver response from client") as Error)
+            .ok_or_else(|| canvas_error!("failed to receive response from client") as Error)
     }
 
     async fn initialize(&mut self, data: ContextData2D) -> Result<()> {

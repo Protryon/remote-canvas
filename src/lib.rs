@@ -1,4 +1,4 @@
-#![recursion_limit = "256"]
+#![recursion_limit = "512"]
 extern crate tokio;
 
 #[macro_use]
@@ -20,7 +20,7 @@ pub fn start_server(web_addr: &str, websocket_addr: &str) -> Result<CanvasGenera
         websocket_addr.to_string(),
         receiver,
     ));
-    tokio::spawn(web::start_server(
+    tokio::task::spawn_local(web::start_server(
         web_addr.to_string(),
         websocket_addr.to_string(),
     ));

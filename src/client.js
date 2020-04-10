@@ -57,6 +57,7 @@ const getTarget = (path_uuid, canvi) => {
     } else {
         target = canvi.ctx;
     }
+    return target;
 };
 
 const getTargetImplied = (path_uuid, canvi) => {
@@ -65,6 +66,7 @@ const getTargetImplied = (path_uuid, canvi) => {
     } else {
         target = void 0;
     }
+    return target;
 };
 
 const receiveMessage = message => {
@@ -177,10 +179,10 @@ const receiveMessage = message => {
             ctx.strokeRect(packet.x, packet.y, packet.width, packet.height);
             genericSuccess(txn_uuid);
         } else if (id == "FillText") {
-            ctx.fillText(packet.text, packet.x, packet.y, packet.max_width);
+            ctx.fillText(packet.text, packet.x, packet.y, ...(packet.max_width == null ? [] : [packet.max_width]));
             genericSuccess(txn_uuid);
         } else if (id == "StrokeText") {
-            ctx.strokeText(packet.text, packet.x, packet.y, packet.max_width);
+            ctx.strokeText(packet.text, packet.x, packet.y, ...(packet.max_width == null ? [] : [packet.max_width]));
             genericSuccess(txn_uuid);
         } else if (id == "CreateLinearGradient") {
             const gradient = ctx.createLinearGradient(packet.x0, packet.y0, packet.x1, packet.y1);
@@ -266,7 +268,11 @@ const receiveMessage = message => {
             genericSuccess(txn_uuid);
         } else if (id == "Stroke") {
             const target = getTargetImplied(packet.path_uuid, canvi);
-            ctx.stroke(target);
+            if (target) {
+                ctx.stroke(target);
+            } else {
+                ctx.stroke();
+            }
             genericSuccess(txn_uuid);
         } else if (id == "Clip") {
             const target = getTargetImplied(packet.path_uuid, canvi);

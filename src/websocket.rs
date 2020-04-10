@@ -13,7 +13,6 @@ use std::net::SocketAddr;
 use std::time::Duration;
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::mpsc;
-use tokio::sync::oneshot;
 use tokio::time::delay_for;
 use tungstenite::protocol::Message;
 use uuid::Uuid;
@@ -300,7 +299,7 @@ pub(crate) enum WsMessageResponse {
 pub(crate) struct WSMessage {
     pub data: WSMessageData,
     pub context: Uuid,
-    pub response: Option<oneshot::Sender<WsMessageResponse>>,
+    pub response: Option<sync::Sender<WsMessageResponse>>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -325,7 +324,7 @@ async fn handle_connection(
 
     let mut ws_stream = tokio_tungstenite::accept_async(raw_stream).await?;
     debug!("WebSocket connection established: {}", address);
-    let mut living_jobs: HashMap<Uuid, oneshot::Sender<WsMessageResponse>> = HashMap::new();
+    let mut living_jobs: HashMap<Uuid, sync::Sender<WsMessageResponse>> = HashMap::new();
     let mut contexts = SelectAll::new();
     loop {
         select! {
@@ -352,7 +351,7 @@ async fn handle_connection(
                     let job = living_jobs.remove(&msg.txn_uuid);
                     match job {
                         Some(job) => {
-                            job.send(msg.data).unwrap_or(());
+                            job.send(msg.data).await;
                         },
                         None => {
                             return Err(canvas_error!("invalid txn id in response: {:?}", &msg));
